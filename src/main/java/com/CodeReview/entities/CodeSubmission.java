@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.File;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,12 +21,11 @@ public class CodeSubmission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name="user_id")
-//    private UserEntity user;
-//
-//    @Column(columnDefinition = "TEXT")
-    private String code;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private UserEntity user;
+
+    private File code;
 
     private String filename;
 

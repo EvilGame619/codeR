@@ -1,5 +1,6 @@
 package com.CodeReview.controllers;
 
+import com.CodeReview.dto.CodeReviewDTO;
 import com.CodeReview.dto.CodeSubmissionDTO;
 import com.CodeReview.services.CodeSubmissionService;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,8 @@ public class CodeSubmissionController {
     }
 
     @PostMapping("/submitCode")
-    public ResponseEntity<CodeSubmissionDTO> submitCode(@RequestBody CodeSubmissionDTO codeSubmissionDTO){
-        CodeSubmissionDTO submittedCode = codeSubmissionService.submit(codeSubmissionDTO);
+    public ResponseEntity<CodeReviewDTO> submitCode(@RequestBody CodeSubmissionDTO codeSubmissionDTO) throws Exception{
+        CodeReviewDTO submittedCode = codeSubmissionService.submit(codeSubmissionDTO);
         return ResponseEntity.ok(submittedCode);
     }
 }

@@ -1,12 +1,17 @@
 package com.CodeReview.services;
 
+import com.CodeReview.entities.CodeReview;
+import com.CodeReview.entities.CodeSubmission;
+
+import java.io.File;
+import java.util.ArrayList;
+
 public interface CodeReviewService {
 
-    String checkStyleReport(String code);
+    CodeReview saveReview(ArrayList<String> checkStyle, ArrayList<String> spotbugs,ArrayList<String> pmd);
 
-    String pmdReport(String code);
 
-    String spotBugs(String code);
-
-    String aiReport(String code);
+    ArrayList<String> checkStyleAnalyze(File file);
+    ArrayList<String> spotBugsAnalyze(File file);
+    ArrayList<String> pmdAnalyze(File file);
 }

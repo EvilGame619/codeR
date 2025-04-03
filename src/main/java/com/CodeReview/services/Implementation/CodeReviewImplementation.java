@@ -1,29 +1,44 @@
 package com.CodeReview.services.Implementation;
 
+import com.CodeReview.entities.CodeReview;
+import com.CodeReview.repositories.CodeReviewRepository;
 import com.CodeReview.services.CodeReviewService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
 public class CodeReviewImplementation implements CodeReviewService {
+
+    private final ModelMapper mapper;
+    private final CodeReviewRepository codeReviewRepository;
+    private final CheckStyleService checkStyleService;
+
     @Override
-    public String checkStyleReport(String code) {
-        return "";
+    public CodeReview saveReview(ArrayList<String> checkStyle, ArrayList<String> spotbugs, ArrayList<String> pmd) {
+        return codeReviewRepository.save(CodeReview.builder()
+                .pmd(pmd)
+                .checkStyle(checkStyle)
+                .spotBugs(spotbugs)
+        .build());
     }
 
     @Override
-    public String pmdReport(String code) {
-        return "";
+    public ArrayList<String> checkStyleAnalyze(File file) {
+        return checkStyleService.analyze(file);
     }
 
     @Override
-    public String spotBugs(String code) {
-        return "";
+    public ArrayList<String> spotBugsAnalyze(File file) {
+        return null;
     }
 
     @Override
-    public String aiReport(String code) {
-        return "";
+    public ArrayList<String> pmdAnalyze(File file) {
+        return null;
     }
 }

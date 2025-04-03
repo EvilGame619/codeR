@@ -1,35 +1,38 @@
 package com.CodeReview.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CodeReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT")
-    private String pmdReport;
+    @ElementCollection
+    @CollectionTable(name = "check_style_error", joinColumns = @JoinColumn(name = "code_submission_id"))
+    @Column(name = "check_style_errors")
+    private List<String> checkStyle;
 
-    @Column(columnDefinition = "TEXT")
-    private String checkStyle;
+    @ElementCollection
+    @CollectionTable(name = "spotbugs_error", joinColumns = @JoinColumn(name = "code_submission_id"))
+    @Column(name = "spot_bugs_errors")
+    private List<String> spotBugs;
 
-    @Column(columnDefinition = "TEXT")
-    private String spotBugs;
-
-    @Column(columnDefinition = "TEXT")
-    private String aiFeedBack;
+    @ElementCollection
+    @CollectionTable(name = "pmd_error", joinColumns = @JoinColumn(name = "code_submission_id"))
+    @Column(name = "pmd_errors")
+    private List<String> pmd;
 
     @OneToOne(mappedBy = "review")
     private CodeSubmission code;

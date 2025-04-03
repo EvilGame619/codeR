@@ -13,7 +13,4 @@ import java.time.LocalDateTime;
 public class CodeSubmissionDTO {
 
     private String code;
-
-
-
 }
