@@ -82,11 +82,23 @@
 			<artifactId>pmd-core</artifactId>
 			<version>6.55.0</version>
 		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.pmd</groupId>
+			<artifactId>pmd-java</artifactId>
+			<version>6.55.0</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs</artifactId>
 			<version>4.7.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sourceforge.pmd/pmd -->
+		<dependency>
+			<groupId>net.sourceforge.pmd</groupId>
+			<artifactId>pmd</artifactId>
+			<version>5.1.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
 		<dependency>
@@ -98,6 +110,44 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.26.0</version> <!-- Use the latest available version -->
+				<configuration>
+					<rulesets>
+						<ruleset>rulesets/java/clean-code.xml</ruleset>
+						<ruleset>rulesets/java/naming.xml</ruleset>
+						<ruleset>rulesets/java/cyclomatic-complexity.xml</ruleset>
+						<ruleset>rulesets/java/unusedcode.xml</ruleset>
+						<ruleset>rulesets/java/design.xml</ruleset>
+						<ruleset>rulesets/java/magicnumber.xml</ruleset>
+					</rulesets>
+					<failOnViolation>true</failOnViolation> <!-- Optional: fails the build if violations exist -->
+				</configuration>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

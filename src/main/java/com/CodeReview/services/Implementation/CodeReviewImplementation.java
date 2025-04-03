@@ -24,7 +24,7 @@ public class CodeReviewImplementation implements CodeReviewService {
                 .pmd(pmd)
                 .checkStyle(checkStyle)
                 .spotBugs(spotbugs)
-        .build());
+                .build());
     }
 
     @Override

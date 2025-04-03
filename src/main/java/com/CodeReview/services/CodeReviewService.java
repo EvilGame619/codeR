@@ -10,7 +10,6 @@ public interface CodeReviewService {
 
     CodeReview saveReview(ArrayList<String> checkStyle, ArrayList<String> spotbugs,ArrayList<String> pmd);
 
-
     ArrayList<String> checkStyleAnalyze(File file);
     ArrayList<String> spotBugsAnalyze(File file);
     ArrayList<String> pmdAnalyze(File file);
