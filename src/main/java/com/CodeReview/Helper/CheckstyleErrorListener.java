@@ -1,5 +1,7 @@
 package com.CodeReview.Helper;
-import com.puppycrawl.tools.checkstyle.api.*;
+
+import com.puppycrawl.tools.checkstyle.api.AuditEvent;
+import com.puppycrawl.tools.checkstyle.api.AuditListener;
 
 public class CheckstyleErrorListener implements AuditListener{
     @Override

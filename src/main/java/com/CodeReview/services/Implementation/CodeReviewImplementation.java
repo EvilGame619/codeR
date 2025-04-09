@@ -17,6 +17,7 @@ public class CodeReviewImplementation implements CodeReviewService {
     private final ModelMapper mapper;
     private final CodeReviewRepository codeReviewRepository;
     private final CheckStyleService checkStyleService;
+    private final PmdService pmdService;
 
     @Override
     public CodeReview saveReview(ArrayList<String> checkStyle, ArrayList<String> spotbugs, ArrayList<String> pmd) {
@@ -39,6 +40,6 @@ public class CodeReviewImplementation implements CodeReviewService {
 
     @Override
     public ArrayList<String> pmdAnalyze(File file) {
-        return null;
+        return pmdService.pmdAnalyze(file);
     }
 }

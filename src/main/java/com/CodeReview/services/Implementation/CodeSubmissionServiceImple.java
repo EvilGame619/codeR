@@ -7,12 +7,8 @@ import com.CodeReview.entities.CodeSubmission;
 import com.CodeReview.repositories.CodeSubmissionRepository;
 import com.CodeReview.services.CodeReviewService;
 import com.CodeReview.services.CodeSubmissionService;
-
 import lombok.RequiredArgsConstructor;
-
-
 import org.modelmapper.ModelMapper;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +24,6 @@ public class CodeSubmissionServiceImple implements CodeSubmissionService {
 
     private final CodeSubmissionRepository codeSubmissionRepository;
     private final ModelMapper mapper;
-    private final CheckStyleService checkStyleService;
     private final CodeReviewService codeReviewService;
     private File createTempJavaFile(String javaCode) throws IOException {
         // Create a temporary file with .java extension
@@ -38,7 +33,6 @@ public class CodeSubmissionServiceImple implements CodeSubmissionService {
         try (FileWriter writer = new FileWriter(tempFile)) {
             writer.write(javaCode);
         }
-
         // Return the created file
         return tempFile;
     }
@@ -70,7 +64,5 @@ public class CodeSubmissionServiceImple implements CodeSubmissionService {
         codeReview.setCode(savedCode);
         return mapper.map(codeReview, CodeReviewDTO.class);
     }
-
-
 
 }
