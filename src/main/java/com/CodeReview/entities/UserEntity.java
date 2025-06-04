@@ -33,6 +33,16 @@ public class UserEntity implements UserDetails {
 
     private String githubURL;
 
+    private String linkedInURL;
+
+    private String profilePicture;
+
+    private Long phoneNumber;
+
+    private String location;
+
+    private String bio;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

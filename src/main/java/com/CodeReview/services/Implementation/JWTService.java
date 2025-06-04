@@ -33,7 +33,7 @@ public class JWTService {
                 .subject(user.getId().toString())
                 .claim("email",user.getEmail())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis()+1000*15))
+                .expiration(new Date(System.currentTimeMillis()+1000*60*60))
                 .signWith(generateKey())
                 .compact();
     }
@@ -42,7 +42,7 @@ public class JWTService {
         String refreshToken =  Jwts.builder()
                 .subject(user.getId().toString())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis()+1000*30))
+                .expiration(new Date(System.currentTimeMillis()+1000*60*60*24))
                 .signWith(generateKey())
                 .compact();
         SessionEntity session = SessionEntity.builder()

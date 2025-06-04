@@ -51,7 +51,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
         filterChain.doFilter(request,response);
-            System.out.println("error at last line of try");
+
         }
         catch (ExpiredJwtException ex){
             System.out.println("error in catch");

@@ -1,5 +1,6 @@
 package com.CodeReview.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,17 +22,22 @@ public class CodeSubmission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="user_id")
     private UserEntity user;
 
-    private File code;
+    @Lob
+    @Column(length = 100000)
+    private byte[] file;
 
     private String filename;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "code_id")
     private CodeReview review;
+
     @CreationTimestamp
     private LocalDateTime submittedAt = LocalDateTime.now();
 }

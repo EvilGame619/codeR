@@ -8,6 +8,7 @@ import net.sourceforge.pmd.lang.java.JavaLanguageModule;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -44,28 +45,22 @@ public class PmdService {
 
             config.addInputPath(file.getAbsolutePath());
             config.addRuleSet("src/main/resources/reviewConfigs/clean-code.xml");
-            StringWriter output = new StringWriter();
-            PrintWriter writer = new PrintWriter(output);
-            PrintStream printStream = System.out;
-            System.setOut(new PrintStream(new OutputStream() {
-                @Override
-                public void write(int b) throws IOException {
-                    writer.write(b);
-                }
-            }));
-// ✅ Step 3: Run PMD Analysis
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PrintStream ps = new PrintStream(baos);
+            PrintStream originalOut = System.out;
 
+            System.setOut(ps);
             PMD.doPMD(config);
+            System.out.flush();
+            System.setOut(originalOut);
 
-            writer.flush();
-            writer.close();
-// ✅ Step 4: Process and print the output
-            ArrayList<String> violation = new ArrayList<>(Arrays.asList(output.toString().split("\\R")));
+            String pmdOutput = baos.toString(StandardCharsets.UTF_8);
 
+            ArrayList<String> violation = new ArrayList<>(Arrays.asList(pmdOutput.split("\\R")));
             ArrayList<String> violations = new ArrayList<>();
-            for(String s:violation){
+            for (String s : violation) {
                 String s1 = sliceString(s);
-                if(s1!=null) violations.add(s1);
+                if (s1 != null) violations.add(s1);
             }
 
             return violations;
