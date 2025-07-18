@@ -71,7 +71,7 @@ public class AuthServiceImple implements AuthService {
                 log.info("session createion");
                 response.setHeader("Set-Cookie",
                         "refreshToken=" + refreshToken +
-                                "; HttpOnly; Max-Age=30; Path=/; SameSite=None; Secure=false");
+                                "; HttpOnly; Max-Age=86400; Path=/; SameSite=None; Secure=false");
         }else{
 
                 String refreshToken = sessionService.getRefreshToken(user.getId());
@@ -83,7 +83,7 @@ public class AuthServiceImple implements AuthService {
                 }
                 response.setHeader("Set-Cookie",
                         "refreshToken=" + refreshToken +
-                                "; HttpOnly; Max-Age=30; Path=/; SameSite=None; Secure=false");
+                                "; HttpOnly; Max-Age=86400; Path=/; SameSite=None; Secure=false");
             }
         log.info("returning");
         return new LoginResponseDTO(accessToken);

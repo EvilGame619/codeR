@@ -6,7 +6,6 @@ import SubTopicCard from "../Components/SubTopicCard.jsx";
 import { IconCheck, IconPencil, IconUpload, IconX } from "@tabler/icons-react";
 export default function Profile(){
 
-    console.log("hello")
 
     const location = useLocation();
     const [userDetails, setUserDetails] = useState([]);
@@ -62,6 +61,13 @@ export default function Profile(){
         
     }
 
+    const handleImageClick = (e)=>{
+            const file = e.target.files[0];
+            if(file){
+                setUpdateDetails({...updateDetails, profilePicture:file});
+            }
+    }
+
 
     return <div className="dark:bg-mine-shaft-950 bg-mine-shaft-200 min-h-screen">
         <Header/>
@@ -71,19 +77,20 @@ export default function Profile(){
 
                 {/* left */}
                 <div className="relative left p-3 flex flex-col justify-center gap-5 items-center self-center w-[30%]  border bg-mine-shaft-900 border-mine-shaft-500 rounded-lg">
-                    <div className="relative flex gap-2 flex-col justify-center">
+                    <div className="flex gap-2 flex-col justify-center">
                         {isEditing && (
-                             <div className="relative w-6 h-6"> {/* Adjust size as needed */}
-    <IconUpload className="absolute top-0 right-0 z-10 text-gray-600 hover:cursor-pointer hover:scale-110 transition" />
-    
-    <input
-      type="file"
-      className="absolute top-0 right-0 w-full h-full opacity-0 cursor-pointer z-20"
-      onChange={handleFileChange} // Your upload logic here
-    />
-  </div>
-
-                            )}
+                            <div className="absolute m-3 right-0 top-0">
+                                <label htmlFor="inputFile">
+                                    <IconUpload/>
+                                </label>
+                                    <input type="file"
+                                    id="inputFile"
+                                    className="hidden"
+                                    onChange={handleImageClick}
+                                    />
+                                </div>
+                                 
+                        )}
                         <img className="rounded-full bg-mine-shaft-300 h-20" src={userDetails.profilePicture} alt="" />
                         <span className="text-center font-bold text-bright-sun-500">{userDetails.username}</span>
                     </div>
