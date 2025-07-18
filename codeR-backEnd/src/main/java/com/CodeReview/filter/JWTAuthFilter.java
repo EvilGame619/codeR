@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -19,6 +20,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JWTAuthFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
@@ -42,6 +44,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         String token = reqToken.split("Bearer ")[1];
         Long userId = jwtService.getUserIdByToken(token);
+        log.info("Inside the jwt filter");
         if(userId!=null && SecurityContextHolder.getContext().getAuthentication()==null){
             UserEntity user = userService.findByID(userId);
 
@@ -56,6 +59,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         catch (ExpiredJwtException ex){
             System.out.println("error in catch");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            log.info("Access token expired");
             response.getWriter().write("Access token expired");
 
         }

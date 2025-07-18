@@ -7,6 +7,7 @@ import com.CodeReview.services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin("http://localhost:5173")
+@Slf4j
 public class AuthController {
+
 
     private final AuthService authService;
 
@@ -26,6 +29,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response){
+        log.info("Inside login controller");
         LoginResponseDTO login = authService.login(loginDTO,response);
         return ResponseEntity.ok(login);
     }

@@ -67,6 +67,11 @@ public class JWTService {
         return Long.valueOf(claims.getSubject());
     }
 
+    public boolean isTokenExpired(String refreshToken){
+        Claims claims = extractClaim(refreshToken);
+        return claims.getExpiration() != null && claims.getExpiration().before(new Date());
+
+    }
     private Claims extractClaim(String token){
         return Jwts.parser()
                 .verifyWith(generateKey())

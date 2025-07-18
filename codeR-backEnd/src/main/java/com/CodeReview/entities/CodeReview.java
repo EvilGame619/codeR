@@ -24,18 +24,21 @@ public class CodeReview {
     @ElementCollection
     @CollectionTable(name = "check_style_error", joinColumns = @JoinColumn(name = "code_submission_id"))
     @Column(name = "check_style_errors")
+    @Lob
     private List<String> checkStyle;
 
 
     @ElementCollection
     @CollectionTable(name = "spotbugs_error", joinColumns = @JoinColumn(name = "code_submission_id"))
     @Column(name = "spot_bugs_errors")
+    @Lob
     private List<String> spotBugs;
 
 
     @ElementCollection
     @CollectionTable(name = "pmd_error", joinColumns = @JoinColumn(name = "code_submission_id"))
     @Column(name = "pmd_errors")
+    @Lob
     private List<String> pmd;
 
     @JsonIgnore

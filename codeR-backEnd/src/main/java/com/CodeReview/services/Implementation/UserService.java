@@ -70,13 +70,14 @@ public class UserService implements UserDetailsService {
                 else throw new ResourceAlreadyExists("Username already exists");
             }
 
-            if (form.getBio() != null) user.setBio(form.getBio());
-            if (form.getLastName() != null) user.setLastName(form.getLastName());
-            if (form.getFirstName() != null) user.setFirstName(form.getFirstName());
+
+            if (form.getBio() != null && !form.getBio().equals("null")) user.setBio(form.getBio());
+            if (form.getLastName() != null && !form.getLastName().equals("null")) user.setLastName(form.getLastName());
+            if (form.getFirstName() != null && !form.getFirstName().equals("null")) user.setFirstName(form.getFirstName());
             if (form.getPhoneNumber() != null) user.setPhoneNumber(form.getPhoneNumber());
-            if (form.getLocation() != null) user.setLocation(form.getLocation());
-            if (form.getGithubURL() != null) user.setGithubURL(form.getGithubURL());
-            if (form.getLinkedInURL() != null) user.setLinkedInURL(form.getLinkedInURL());
+            if (form.getLocation() != null && !form.getLocation().equals("null")) user.setLocation(form.getLocation());
+            if (form.getGithubURL() != null && !form.getGithubURL().equals("null")) user.setGithubURL(form.getGithubURL());
+            if (form.getLinkedInURL() != null && !form.getLinkedInURL().equals("null")) user.setLinkedInURL(form.getLinkedInURL());
             if (form.getProfilePicture() != null) {
                 user.setProfilePicture(
                         cloudinaryService.getCloudinaryLink(form.getProfilePicture()));

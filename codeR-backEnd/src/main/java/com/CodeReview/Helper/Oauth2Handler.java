@@ -1,19 +1,15 @@
 package com.CodeReview.Helper;
 
 import com.CodeReview.entities.UserEntity;
-import com.CodeReview.services.Implementation.CloudinaryService;
 import com.CodeReview.services.Implementation.JWTService;
 import com.CodeReview.services.Implementation.UserService;
 import com.CodeReview.services.SessionService;
-import com.cloudinary.Cloudinary;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -21,7 +17,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.Random;
 
 @Slf4j
@@ -56,15 +51,20 @@ public class Oauth2Handler extends SimpleUrlAuthenticationSuccessHandler {
         }
 
         String accessToken = jwtService.generateAccessToken(user);
-        Boolean sessionExists = sessionService.findSession(user.getId());
+        boolean sessionExists = sessionService.isSessionExists(user.getId());
         if(!sessionExists) {
             String refreshToken = jwtService.generateRefreshToken(user);
-
             response.setHeader("Set-Cookie",
                     "refreshToken=" + refreshToken +
                             "; HttpOnly; Max-Age=86400; Path=/; SameSite=None; Secure=false");
         }else{
+            log.info("inside the else part");
+            boolean valid = sessionService.validateSession(user);
             String refreshToken = sessionService.getRefreshToken(user.getId());
+            if(!valid) {
+                sessionService.deleteSession(user.getId());
+                refreshToken = jwtService.generateRefreshToken(user);
+            }
             response.setHeader("Set-Cookie",
                     "refreshToken=" + refreshToken +
                             "; HttpOnly; Max-Age=86400; Path=/; SameSite=None; Secure=false");

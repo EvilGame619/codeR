@@ -49,6 +49,7 @@ public class AuthServiceImple implements AuthService {
         UserEntity checkUser = userService.findByEmail(signupDTO.getEmail());
         if(checkUser!=null) throw new ResourceAlreadyExists("User already exists with email: "+ signupDTO.getEmail());
         UserEntity user = mapper.map(signupDTO, UserEntity.class);
+        log.info(user.getGithubURL());
         user.setProfilePicture(defaultPic);
         userService.saveUser(user);
         return signupDTO;
@@ -58,25 +59,33 @@ public class AuthServiceImple implements AuthService {
     @Override
     public LoginResponseDTO login(LoginDTO loginDTO, HttpServletResponse response) {
 
+        log.info("inside login metod");
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),loginDTO.getPassword()));
 
             UserEntity user = (UserEntity) authentication.getPrincipal();
-
+        log.info("after user is fetched");
             String accessToken = jwtService.generateAccessToken(user);
-            Boolean sessionExists = sessionService.findSession(user.getId());
+            Boolean sessionExists = sessionService.isSessionExists(user.getId());
             if(!sessionExists) {
                 String refreshToken = jwtService.generateRefreshToken(user);
-
+                log.info("session createion");
                 response.setHeader("Set-Cookie",
                         "refreshToken=" + refreshToken +
                                 "; HttpOnly; Max-Age=30; Path=/; SameSite=None; Secure=false");
         }else{
+
                 String refreshToken = sessionService.getRefreshToken(user.getId());
+                boolean validSession = sessionService.validateSession(user);
+                if(!validSession){
+                    sessionService.deleteSession(user.getId());
+                    refreshToken = jwtService.generateRefreshToken(user);
+
+                }
                 response.setHeader("Set-Cookie",
                         "refreshToken=" + refreshToken +
                                 "; HttpOnly; Max-Age=30; Path=/; SameSite=None; Secure=false");
             }
-
+        log.info("returning");
         return new LoginResponseDTO(accessToken);
     }
 
