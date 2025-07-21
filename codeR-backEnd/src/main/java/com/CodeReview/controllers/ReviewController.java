@@ -25,7 +25,6 @@ public class ReviewController {
 
     @DeleteMapping("/{id}")
     public void deleteCodeReview(@PathVariable Long id){
-        codeReviewService.deleteReview(id);
         codeSubmissionService.deleteCode(id);
 
     }

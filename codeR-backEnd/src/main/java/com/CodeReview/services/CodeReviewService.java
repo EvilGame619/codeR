@@ -17,4 +17,6 @@ public interface CodeReviewService {
     CodeReviewDTO getReview(Long id);
 
     void deleteReview(Long id);
+
+    CodeReview findReview(Long id);
 }

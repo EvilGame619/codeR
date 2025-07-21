@@ -5,6 +5,7 @@ import com.CodeReview.dto.LoginResponseDTO;
 import com.CodeReview.dto.SignupDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.Authentication;
 
 
 public interface AuthService {
@@ -15,5 +16,5 @@ public interface AuthService {
 
     LoginResponseDTO refresh(HttpServletRequest request);
 
-
+    void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication);
 }

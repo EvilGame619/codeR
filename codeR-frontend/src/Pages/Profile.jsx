@@ -12,6 +12,7 @@ export default function Profile(){
     const subTopic = ["Personal info","Contact","Social Links"];
     const [isEditing, setEditing] = useState(false); 
     const [updateDetails, setUpdateDetails] = useState(userDetails);
+    const [username,setUsername] = useState(null);
     useEffect(()=>{
             const param = new URLSearchParams(location.search);
             const token = param.get("token");
@@ -61,6 +62,12 @@ export default function Profile(){
         
     }
 
+    // const checkUsernameAvailablity = (s) =>{
+    //     if(s.length()===4){
+            
+    //     }
+    // }
+
     const handleImageClick = (e)=>{
             const file = e.target.files[0];
             if(file){
@@ -69,107 +76,211 @@ export default function Profile(){
     }
 
 
-    return <div className="dark:bg-mine-shaft-950 bg-mine-shaft-200 min-h-screen">
-        <Header/>
-         <div className="flex justify-center my-6 text-3xl font-bold text-bright-sun-600">PROFILE SUMMARY</div>
-            {(userDetails != null && userDetails.length !==0 )? 
-            <div className="flex gap-3 duration-500 justify-center mx-[15%]">
+    return (
+        <div>
+    <Header />
+  <div className="dark:bg-mine-shaft-950 bg-mine-shaft-200 min-h-screen px-4 py-6">
+    <h1 className="text-center text-3xl font-bold text-mine-shaft-600 dark:text-bright-sun-600 mb-6">
+      PROFILE SUMMARY
+    </h1>
 
-                {/* left */}
-                <div className="relative left p-3 flex flex-col justify-center gap-5 items-center self-center w-[30%]  border bg-mine-shaft-900 border-mine-shaft-500 rounded-lg">
-                    <div className="flex gap-2 flex-col justify-center">
-                        {isEditing && (
-                            <div className="absolute m-3 right-0 top-0">
-                                <label htmlFor="inputFile">
-                                    <IconUpload/>
-                                </label>
-                                    <input type="file"
-                                    id="inputFile"
-                                    className="hidden"
-                                    onChange={handleImageClick}
-                                    />
-                                </div>
-                                 
-                        )}
-                        <img className="rounded-full bg-mine-shaft-300 h-20" src={userDetails.profilePicture} alt="" />
-                        <span className="text-center font-bold text-bright-sun-500">{userDetails.username}</span>
-                    </div>
-                    <div className="w-full flex gap-3 flex-col ">
-                        {subTopic.map((data,index)=><SubTopicCard key={index} text={data}/>)}
-                    </div>
-                </div>
+    {userDetails && userDetails.length !== 0 ? (
+      <div className="flex flex-col md:flex-row gap-6 justify-center max-w-[1200px] mx-auto">
 
-                {/* right */}
-                <div className="right relative w-[70%] border bg-mine-shaft-900 border-mine-shaft-500 rounded-lg">
-                    <div className="absolute  right-[3%] top-[2%] cursor-pointer hover:scale-110" onClick={()=>{setEditing(!isEditing)}}>{isEditing? <div className="flex gap-5"><IconCheck onClick={onCheckClick}/><IconX onClick={()=>{setEditing(!isEditing)}}/></div>:<IconPencil/>}</div>
-                    {/* personal info */}
-                    <div className="personal-info px-5 py-2">
-                        <div className="font-semibold text-2xl text-bright-sun-500">Personal Info</div>
-                        <div className="flex gap-10 mt-5 w-full">
-                            <div className="w-[40%]">
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-3/4">First Name  </div>
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-3/4">Last Name  </div>
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-3/4">Location  </div>
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-3/4">Bio  </div>
-                            </div>
-                            <div className="w-[60%]">
+        {/* Left panel */}
+        <div className="flex flex-col items-center w-full md:w-1/3 p-4 border border-mine-shaft-500 rounded-lg bg-mine-shaft-300 dark:bg-mine-shaft-900 relative">
+          {isEditing && (
+            <label
+              htmlFor="inputFile"
+              className="absolute top-3 right-3 cursor-pointer"
+              title="Upload Profile Picture"
+            >
+              <IconUpload />
+            </label>
+          )}
+          <input
+            type="file"
+            id="inputFile"
+            className="hidden"
+            onChange={handleImageClick}
+          />
+          <img
+            src={userDetails.profilePicture}
+            alt="Profile"
+            className="rounded-full h-20 w-20 bg-mine-shaft-300"
+          />
+          <span className="mt-3 text-center font-bold text-bright-sun-700 dark:text-bright-sun-500 max-w-[120px] w-full">
+            {isEditing ? (
+              <input
+                type="text"
+                maxLength={20}
+                defaultValue={userDetails.username || ""}
+                className="bg-mine-shaft-400 dark:bg-mine-shaft-300 rounded-lg placeholder:text-bright-sun-700 dark:placeholder:text-mine-shaft-900 text-bright-sun-700 dark:text-mine-shaft-900 text-center w-full px-2 py-1"
+                onChange={(e) =>
+                  setUpdateDetails({ ...updateDetails, username: e.target.value })
+                }
+              />
+            ) : (
+              userDetails.username || "null"
+            )}
+          </span>
 
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-full">{
-                                    isEditing? (<input type="text" placeholder={userDetails.firstName} className="bg-mine-shaft-300 rounded-lg placeholder:text-mine-shaft-900 text-mine-shaft-900 text-center" onChange={(e)=>setUpdateDetails({...updateDetails, firstName: e.target.value})}/>) :(
-                                userDetails.firstName !== null? userDetails.firstName:"null")}</div>
+          <div className="mt-6 w-full flex flex-col gap-3">
+            {subTopic.map((data, index) => (
+              <SubTopicCard key={index} text={data} />
+            ))}
+          </div>
+        </div>
 
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-full">{
-                                isEditing? (<input type="text" placeholder={userDetails.lastName} className="bg-mine-shaft-300 rounded-lg placeholder:text-mine-shaft-900 text-mine-shaft-900 text-center" onChange={(e)=>setUpdateDetails({...updateDetails, lastName: e.target.value})}/>) :(
-                                userDetails.lastName !== null? userDetails.lastName:"null")}</div>
+        {/* Right panel */}
+<div className="w-full md:w-2/3 border border-mine-shaft-500 rounded-lg bg-mine-shaft-300 dark:bg-mine-shaft-900 p-6 relative">
 
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-full">{
-                                isEditing? (<input type="text" placeholder={userDetails.location} className="bg-mine-shaft-300 rounded-lg placeholder:text-mine-shaft-900 text-mine-shaft-900 text-center" onChange={(e)=>setUpdateDetails({...updateDetails, location: e.target.value})}/>) :(
-                                userDetails.location !== null? userDetails.location:"null")}</div>
+  {/* Edit toggle icons */}
+  <div
+    className="absolute right-4 top-4 cursor-pointer hover:scale-110 flex gap-3 z-10"
+    onClick={() => setEditing(!isEditing)}
+    title={isEditing ? "Cancel Editing" : "Edit Profile"}
+  >
+    {isEditing ? (
+      <>
+        <IconCheck onClick={onCheckClick} />
+        <IconX onClick={() => setEditing(false)} />
+      </>
+    ) : (
+      <IconPencil />
+    )}
+  </div>
 
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-full">{
-                                isEditing? (<input type="text" placeholder={userDetails.bio} className="bg-mine-shaft-300 rounded-lg placeholder:text-mine-shaft-900 text-mine-shaft-900 text-center" onChange={(e)=>setUpdateDetails({...updateDetails, bio: e.target.value})}/>) :(
-                                userDetails.bio !== null? userDetails.bio: "null")}</div>
-                            </div>
-                        </div>
-                    </div>
+  {/* Personal Info */}
+  <section className="mb-8">
+    <h2 className="font-semibold text-2xl text-mine-shaft-500 dark:text-bright-sun-500 mb-5">
+      Personal Info
+    </h2>
+    <div className="flex flex-col gap-4">
+      {[
+        { label: "First Name", field: "firstName" },
+        { label: "Last Name", field: "lastName" },
+        { label: "Location", field: "location" },
+        { label: "Bio", field: "bio" },
+      ].map(({ label, field }) => (
+        <div
+          key={field}
+          className="flex justify-between items-center bg-mine-shaft-400 dark:bg-mine-shaft-600 rounded-lg px-3 py-2"
+        >
+          <div className="text-mine-shaft-200 dark:text-mine-shaft-400 font-medium">
+            {label}
+          </div>
 
-                    {/* contact */}
-                    <div className="contact px-5 py-2">
-                        <div className="font-semibold text-2xl text-bright-sun-500">Contact</div>
-                        <div className="flex gap-10 mt-5 w-full">
-                            <div className="w-[40%]">
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-3/4">Email  </div>
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-3/4">Phone Number  </div>
-                            </div>
-                            <div className="w-[60%]">
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-full">
-                                    {userDetails.email !==null? userDetails.email:"null"}</div>
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-full">{
-                                isEditing? (<input type="text" placeholder={userDetails.phoneNumber} className="bg-mine-shaft-300 rounded-lg placeholder:text-mine-shaft-900 text-mine-shaft-900 text-center" onChange={(e)=>setUpdateDetails({...updateDetails, phoneNumber: e.target.value})}/>) :(
-                                userDetails.phoneNumber !==null? userDetails.phoneNumber:"null")}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Social Links */}
-                    <div className="social px-5 py-2">
-                        <div className="font-semibold text-2xl text-bright-sun-500">Social Links</div>
-                        <div className="flex gap-10 mt-5 w-full">
-                            <div className="w-[40%]">
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-3/4">Github  </div>
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-3/4">LinkedIn </div>
-                            </div>
-                            <div className="w-[60%]">
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-full">{
-                                isEditing? (<input type="text" placeholder={userDetails.githubURL} className="bg-mine-shaft-300 rounded-lg placeholder:text-mine-shaft-900 text-mine-shaft-900 text-center" onChange={(e)=>setUpdateDetails({...updateDetails, githubURL: e.target.value})}/>) :(
-                                userDetails.githubURL !==null? userDetails.githubURL:"null")}</div>
-                                <div className="text-center px-3 py-2 text-mine-shaft-200 mb-3 rounded-lg bg-mine-shaft-600 w-full">{
-                                isEditing? (<input type="text" placeholder={userDetails.likedInURL} className="bg-mine-shaft-300 rounded-lg placeholder:text-mine-shaft-900 text-mine-shaft-900 text-center" onChange={(e)=>setUpdateDetails({...updateDetails, likedInURL: e.target.value})}/>) :(
-                                userDetails.likedInURL !==null? userDetails.likedInURL:"null")}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-        </div>:(<div>No Records</div>)}
+          <div className="text-mine-shaft-900 dark:text-mine-shaft-200 w-[60%] text-right">
+            {isEditing ? (
+              <input
+                type="text"
+                defaultValue={userDetails[field] || ""}
+                className="bg-transparent w-full text-right outline-none dark:text-mine-shaft-200"
+                onChange={(e) =>
+                  setUpdateDetails({
+                    ...updateDetails,
+                    [field]: e.target.value,
+                  })
+                }
+              />
+            ) : (
+              userDetails[field] || "null"
+            )}
+          </div>
+        </div>
+      ))}
     </div>
+  </section>
+
+  {/* Contact */}
+  <section className="mb-8">
+    <h2 className="font-semibold text-2xl text-mine-shaft-500 dark:text-bright-sun-500 mb-5">
+      Contact
+    </h2>
+    <div className="flex flex-col gap-4">
+      {[
+        { label: "Email", value: userDetails.email || "null", editable: false, field: null },
+        { label: "Phone Number", value: userDetails.phoneNumber || "null", editable: true, field: "phoneNumber" },
+      ].map(({ label, value, editable, field }) => (
+        <div
+          key={label}
+          className="flex justify-between items-center bg-mine-shaft-400 dark:bg-mine-shaft-600 rounded-lg px-3 py-2"
+        >
+          <div className="text-mine-shaft-200 dark:text-mine-shaft-400 font-medium">
+            {label}
+          </div>
+          <div className="text-mine-shaft-900 dark:text-mine-shaft-200 w-[60%] text-right">
+            {editable && isEditing ? (
+              <input
+                type="text"
+                defaultValue={value}
+                className="bg-transparent w-full text-right outline-none dark:text-mine-shaft-200"
+                onChange={(e) =>
+                  setUpdateDetails({
+                    ...updateDetails,
+                    [field]: e.target.value,
+                  })
+                }
+              />
+            ) : (
+              value
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* Social Links */}
+  <section>
+    <h2 className="font-semibold text-2xl text-mine-shaft-500 dark:text-bright-sun-500 mb-5">
+      Social Links
+    </h2>
+    <div className="flex flex-col gap-4">
+      {[
+        { label: "Github", field: "githubURL" },
+        { label: "LinkedIn", field: "likedInURL" },
+      ].map(({ label, field }) => (
+        <div
+          key={field}
+          className="flex justify-between items-center bg-mine-shaft-400 dark:bg-mine-shaft-600 rounded-lg px-3 py-2"
+        >
+          <div className="text-mine-shaft-200 dark:text-mine-shaft-400 font-medium">
+            {label}
+          </div>
+          <div className="text-mine-shaft-900 dark:text-mine-shaft-200 w-[60%] text-right">
+            {isEditing ? (
+              <input
+                type="text"
+                defaultValue={userDetails[field] || ""}
+                className="bg-transparent w-full text-right outline-none dark:text-mine-shaft-200"
+                onChange={(e) =>
+                  setUpdateDetails({
+                    ...updateDetails,
+                    [field]: e.target.value,
+                  })
+                }
+              />
+            ) : (
+              userDetails[field] || "null"
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</div>
+  </div>
+
+    ) : (
+      <div className="text-center text-mine-shaft-700 dark:text-mine-shaft-300 mt-10">
+        No Records
+      </div>
+    )}
+  </div>
+  </div>
+);
+
+
 }

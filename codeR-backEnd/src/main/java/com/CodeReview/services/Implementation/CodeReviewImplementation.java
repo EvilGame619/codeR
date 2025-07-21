@@ -57,14 +57,18 @@ public class CodeReviewImplementation implements CodeReviewService {
         return mapper.map(codeReview, CodeReviewDTO.class);
     }
 
-    @Transactional
+
     @Override
     public void deleteReview(Long id) {
         CodeReview codeReview = codeReviewRepository.findById(id).orElse(null);
         if(codeReview == null ) throw new ResourceNotFoundException("Code Review not found with id: "+id);
         codeReview.setCode(null);
         codeReviewRepository.delete(codeReview);
-        System.out.println("Review Deleted");
+    }
+
+    @Override
+    public CodeReview findReview(Long id){
+        return codeReviewRepository.findById(id).orElse(null);
     }
 
 }

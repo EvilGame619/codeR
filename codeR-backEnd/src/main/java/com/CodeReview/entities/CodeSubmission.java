@@ -34,7 +34,7 @@ public class CodeSubmission {
     private String filename;
 
     @JsonIgnore
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "code_id")
     private CodeReview review;
 

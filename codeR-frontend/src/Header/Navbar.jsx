@@ -10,9 +10,21 @@ function Navbar(){
     ]
 
     return (
-        <div className="flex gap-8">
-        {nav.map((data, index)=><NavLink key={index} className={(e)=>e.isActive? 'text-bright-sun-500 scale-105 duration-75 border-b-mine-shaft-200 font-semibold':' font-semibold hover:scale-105 duration-75 dark:text-mine-shaft-200 text-mine-shaft-500'} to={data.path}>{data.title}</NavLink>)}
-        </div>
+        <div className="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-8 text-sm sm:text-base">
+    {nav.map((data, index) => (
+      <NavLink
+        key={index}
+        to={data.path}
+        className={({ isActive }) =>
+          isActive
+            ? 'text-bright-sun-500 scale-105 duration-75 border-b-2 border-mine-shaft-200 font-semibold'
+            : 'font-semibold hover:scale-105 duration-75 dark:text-mine-shaft-200 text-mine-shaft-500'
+        }
+      >
+        {data.title}
+      </NavLink>
+    ))}
+  </div>
     )
 }
 

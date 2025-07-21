@@ -14,4 +14,6 @@ public interface SessionService {
     void deleteSession(Long userID);
 
     boolean validateSession(UserEntity user);
+
+    SessionEntity getSession(Long userID);
 }

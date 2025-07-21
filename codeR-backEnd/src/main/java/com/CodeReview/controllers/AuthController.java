@@ -29,7 +29,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response){
-        log.info("Inside login controller");
         LoginResponseDTO login = authService.login(loginDTO,response);
         return ResponseEntity.ok(login);
     }
@@ -37,5 +36,10 @@ public class AuthController {
     @GetMapping("/refresh")
     public ResponseEntity<LoginResponseDTO> refresh(HttpServletRequest request, Authentication authentication){
         return  ResponseEntity.ok(authService.refresh(request));
+    }
+
+    @GetMapping("/logout")
+    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication){
+        authService.logout(request,response, authentication);
     }
 }

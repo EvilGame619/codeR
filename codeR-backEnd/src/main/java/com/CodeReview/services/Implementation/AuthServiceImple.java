@@ -5,10 +5,13 @@ import com.CodeReview.Exceptions.ResourceAlreadyExists;
 import com.CodeReview.dto.LoginDTO;
 import com.CodeReview.dto.LoginResponseDTO;
 import com.CodeReview.dto.SignupDTO;
+import com.CodeReview.entities.SessionEntity;
 import com.CodeReview.entities.UserEntity;
 import com.CodeReview.services.AuthService;
 import com.CodeReview.services.SessionService;
+import com.nimbusds.oauth2.sdk.util.JWTClaimsSetUtils;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,6 +24,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,7 +53,6 @@ public class AuthServiceImple implements AuthService {
         UserEntity checkUser = userService.findByEmail(signupDTO.getEmail());
         if(checkUser!=null) throw new ResourceAlreadyExists("User already exists with email: "+ signupDTO.getEmail());
         UserEntity user = mapper.map(signupDTO, UserEntity.class);
-        log.info(user.getGithubURL());
         user.setProfilePicture(defaultPic);
         userService.saveUser(user);
         return signupDTO;
@@ -59,19 +62,17 @@ public class AuthServiceImple implements AuthService {
     @Override
     public LoginResponseDTO login(LoginDTO loginDTO, HttpServletResponse response) {
 
-        log.info("inside login metod");
+
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),loginDTO.getPassword()));
 
             UserEntity user = (UserEntity) authentication.getPrincipal();
-        log.info("after user is fetched");
             String accessToken = jwtService.generateAccessToken(user);
             Boolean sessionExists = sessionService.isSessionExists(user.getId());
             if(!sessionExists) {
                 String refreshToken = jwtService.generateRefreshToken(user);
-                log.info("session createion");
                 response.setHeader("Set-Cookie",
                         "refreshToken=" + refreshToken +
-                                "; HttpOnly; Max-Age=86400; Path=/; SameSite=None; Secure=false");
+                                "; Max-Age=86400; Path=/; SameSite=None; Secure=false");
         }else{
 
                 String refreshToken = sessionService.getRefreshToken(user.getId());
@@ -83,15 +84,13 @@ public class AuthServiceImple implements AuthService {
                 }
                 response.setHeader("Set-Cookie",
                         "refreshToken=" + refreshToken +
-                                "; HttpOnly; Max-Age=86400; Path=/; SameSite=None; Secure=false");
+                                "; Max-Age=86400; Path=/; SameSite=None; Secure=false");
             }
-        log.info("returning");
         return new LoginResponseDTO(accessToken);
     }
 
     @Override
     public LoginResponseDTO refresh(HttpServletRequest request) {
-        log.info("refresh endpoint hit");
         String refreshTokenInCookie = tokenService.getRefreshTokenFromCookie(request);
         try{
         Long userID = jwtService.getUserIdByToken(refreshTokenInCookie);
@@ -108,11 +107,30 @@ public class AuthServiceImple implements AuthService {
         }catch ( ExpiredJwtException e) {
             Long userID = jwtService.getUserIdFromExpiredToken(tokenService.getRefreshTokenFromCookie(request));
             sessionService.deleteSession(userID);
-            System.out.println("Session deleted");
             throw new RefreshTokenException("Refresh token expired");
         }
 
     }
 
+    @Transactional
+    @Override
+    public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication){
+
+        String refreshToken = jwtService.extractTokenFromCookie(request, "refreshToken");
+
+        Long userID = jwtService.getUserIdByToken(refreshToken);
+
+        sessionService.deleteSession(userID);
+
+        Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        SecurityContextHolder.clearContext();
+
+
+    }
 
 }

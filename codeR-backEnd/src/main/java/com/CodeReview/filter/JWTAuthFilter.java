@@ -30,7 +30,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try{
             String path = request.getRequestURI();
-            if (path.equals("/auth/refresh") || path.equals("/auth/login") || path.equals("/auth/signup")) {
+            if (path.equals("/auth/refresh") || path.equals("/auth/login") || path.equals("/auth/signup") || path.equals("/auth/logout")) {
 
                 filterChain.doFilter(request, response);
                 return;
@@ -44,7 +44,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         String token = reqToken.split("Bearer ")[1];
         Long userId = jwtService.getUserIdByToken(token);
-        log.info("Inside the jwt filter");
         if(userId!=null && SecurityContextHolder.getContext().getAuthentication()==null){
             UserEntity user = userService.findByID(userId);
 
@@ -57,9 +56,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
         }
         catch (ExpiredJwtException ex){
-            System.out.println("error in catch");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            log.info("Access token expired");
             response.getWriter().write("Access token expired");
 
         }

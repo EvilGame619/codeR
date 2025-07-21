@@ -56,9 +56,8 @@ public class Oauth2Handler extends SimpleUrlAuthenticationSuccessHandler {
             String refreshToken = jwtService.generateRefreshToken(user);
             response.setHeader("Set-Cookie",
                     "refreshToken=" + refreshToken +
-                            "; HttpOnly; Max-Age=86400; Path=/; SameSite=None; Secure=false");
+                            "; Max-Age=86400; Path=/; SameSite=None; Secure=false");
         }else{
-            log.info("inside the else part");
             boolean valid = sessionService.validateSession(user);
             String refreshToken = sessionService.getRefreshToken(user.getId());
             if(!valid) {
@@ -67,7 +66,7 @@ public class Oauth2Handler extends SimpleUrlAuthenticationSuccessHandler {
             }
             response.setHeader("Set-Cookie",
                     "refreshToken=" + refreshToken +
-                            "; HttpOnly; Max-Age=86400; Path=/; SameSite=None; Secure=false");
+                            "; Max-Age=86400; Path=/; SameSite=None; Secure=false");
         }
 
         String frontEndUrl = "http://localhost:5173/dashboard?token="+accessToken;

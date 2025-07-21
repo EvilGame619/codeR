@@ -19,14 +19,12 @@ import java.util.Map;
 
 public class CloudinaryService {
 
-    private final static Logger logger = LoggerFactory.getLogger(CloudinaryService.class);
     private final Cloudinary cloudinary;
 
     public String getCloudinaryLink(MultipartFile multipartFile){
         try{
             Map uploadResult = cloudinary.uploader().upload(multipartFile.getBytes(), ObjectUtils.emptyMap());
             String uri = (String) uploadResult.get("secure_url");
-            logger.info(uri);
             return uri;
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -96,4 +96,8 @@ public class UserService implements UserDetailsService {
         dto.setUsername(user.getUsername());
         return dto;
     }
+
+    public boolean isUsernameAvailable(String username){
+        return !userRepository.findByUsername(username).isPresent();
+    }
 }

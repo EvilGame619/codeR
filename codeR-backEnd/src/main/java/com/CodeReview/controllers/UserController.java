@@ -31,5 +31,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserDetails(request));
     }
 
+    @GetMapping("/findUsername")
+    public boolean findUsername(String username){
+        return userService.isUsernameAvailable(username);
+    }
+
 
 }

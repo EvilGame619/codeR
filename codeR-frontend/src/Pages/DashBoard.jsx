@@ -16,14 +16,14 @@ function HomePage(){
             localStorage.setItem("token",token);
         }
     },[location])
-    return <div className="dark:bg-mine-shaft-950 bg-mine-shaft-200 h-[100vh]">
-        <Header/>
-        <div className="h-[85%] flex mx-auto w-[70%] mt-5">
-            <MonacoEditor language="java" setCodeInParent={setCode}/>
-            {code !== null && <Report code={code} />}
-            
-        </div>
-    </div>
+    return<div className="dark:bg-mine-shaft-950 bg-mine-shaft-200 min-h-screen">
+  <Header />
+  <div className="flex flex-col lg:flex-row w-[90%] lg:w-[70%] mx-auto mt-5 gap-4 h-[85%]">
+    <MonacoEditor language="java" setCodeInParent={setCode} />
+    {code !== null && <Report code={code} />}
+  </div>
+</div>
+
 }
 
 export default HomePage;

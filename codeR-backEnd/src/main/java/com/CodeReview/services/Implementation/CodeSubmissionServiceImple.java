@@ -137,7 +137,6 @@ public class CodeSubmissionServiceImple implements CodeSubmissionService {
         if(codeSubmission == null) throw new ResourceNotFoundException("Code Not Found with id: "+ id);
         codeSubmission.setReview(null);
         codeSubmissionRepository.delete(codeSubmission);
-        System.out.println("Code Deleted");
     }
 
     @Transactional

@@ -40,14 +40,11 @@ public class SessionServiceImplementation implements SessionService {
     @Override
     public void deleteSession(Long userID) {
         SessionEntity session = sessionRepository.findByUserId(userID).orElse(null);
-        System.out.println(session);
         sessionRepository.delete(session);
-        SessionEntity session1 = sessionRepository.findByUserId(userID).orElse(null);
-        System.out.println(session1);
-        log.info("User deleted");
     }
 
-    private SessionEntity getSession(Long userID){
+    @Override
+    public SessionEntity getSession(Long userID){
         return sessionRepository.findByUserId(userID).orElse(null);
     }
 
